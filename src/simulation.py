@@ -21,6 +21,7 @@ if __name__ == '__main__':
     object_L.append(client)
     server = network.Host(2)
     object_L.append(server)
+
     
     #create routers and routing tables for connected clients (subnets)
     router_a_rt_tbl_D = {1: {0: 1}} # packet to host 1 through interface 0 for cost 1
