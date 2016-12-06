@@ -6,6 +6,12 @@ Created on Oct 12, 2016
 import queue
 import threading
 
+class MPLSframe:
+    ## @param NetworkPacket - a network packet to encapsulate
+    #  @param label - a path label for the network packet
+    def __init__(self, label, network_packet):
+        self.network_packet = network_packet
+        self.label = label
 
 ## wrapper class for a queue of packets
 class Interface:
