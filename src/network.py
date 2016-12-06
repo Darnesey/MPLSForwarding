@@ -7,6 +7,27 @@ import queue
 import threading
 
 
+class Priority:
+
+    # there seems to be no online documentation for the Python PQ so I will just have to build it myself
+    def __init__(self):
+        self.queue = []
+
+    def put(self, item):
+        if len(self.queue) == 0:
+            self.queue.append(item)
+        else:
+            for packet in self.queue:
+                if packet.priority < item.priority:
+                    self.queue.insert(self.queue.index(packet), item)
+                    break
+
+    def pop(self):
+        return self.queue.pop(0)
+
+    def size(self):
+        return len(self.queue)
+
 ## wrapper class for a queue of packets
 class Interface:
     ## @param maxsize - the maximum size of the queue storing packets
@@ -164,7 +185,9 @@ class Router:
         for i in range(len(intf_cost_L)):
             self.intf_L.append(Interface(intf_cost_L[i], max_queue_size, intf_capacity_L[i]))
         #set up the routing table for connected hosts
-        self.rt_tbl_D = rt_tbl_D 
+        self.rt_tbl_D = rt_tbl_D
+        #set up the priority queue
+        self.priorityQ = queue.PriorityQueue();
 
     ## called when printing the object
     def __str__(self):
@@ -179,6 +202,7 @@ class Router:
             pkt_S = self.intf_L[i].get('in')
             #if packet exists make a forwarding decision
             if pkt_S is not None:
+
                 p = NetworkPacket.from_byte_S(pkt_S) #parse a packet out
                 if p.prot_S == 'data':
                     self.forward_packet(p,i)
