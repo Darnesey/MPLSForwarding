@@ -7,6 +7,7 @@ Created on Oct 12, 2016
 import queue
 import threading
 import time
+from network import NetworkPacket
 
 ## An abstraction of a link between router interfaces
 class Link:
@@ -38,6 +39,8 @@ class Link:
             try:
                 #check if the interface is free to transmit a packet
                 if intf_a.next_avail_time <= time.time():
+                    out_priori_one = intf_a.o_priority_one
+                    out_priori_zero = intf_a.o_priority_zero
                     #transmit the packet
                     pkt_S = intf_a.get('out')
                     intf_b.put(pkt_S, 'in')
@@ -46,8 +49,8 @@ class Link:
                     intf_a.next_avail_time = time.time() + pkt_size/intf_a.capacity                
                     print('%s: transmitting packet "%s" on %s %s -> %s, %s \n' \
                           ' - seconds until the next available time %f\n' \
-                          ' - queue size %d\n' \
-                          % (self, pkt_S, node_a, node_a_intf, node_b, node_b_intf, intf_a.next_avail_time - time.time(), intf_a.out_queue.qsize()))
+                          ' - queue size %d: priority 0: %d packets, priority 1: %d packets\n' \
+                          % (self, pkt_S, node_a, node_a_intf, node_b, node_b_intf, intf_a.next_avail_time - time.time(), intf_a.out_queue.qsize(), out_priori_zero, out_priori_one))
                 # uncomment the lines below to see waiting time until next transmission
 #                 else:
 #                     print('%s: waiting to transmit packet on %s %s -> %s, %s for another %f milliseconds' % (self, node_a, node_a_intf, node_b, node_b_intf, intf_a.next_avail_time - time.time()))    

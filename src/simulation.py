@@ -11,7 +11,7 @@ import sys
 
 ##configuration parameters
 router_queue_size = 0 #0 means unlimited
-simulation_time = 10 #give the network sufficient time to transfer all packets before quitting
+simulation_time = 20 #give the network sufficient time to transfer all packets before quitting
 
 if __name__ == '__main__':
     object_L = [] #keeps track of objects, so we can kill their threads
@@ -21,7 +21,6 @@ if __name__ == '__main__':
     object_L.append(client)
     server = network.Host(2)
     object_L.append(server)
-
     
     #create routers and routing tables for connected clients (subnets)
     router_a_rt_tbl_D = {1: {0: 1}} # packet to host 1 through interface 0 for cost 1
