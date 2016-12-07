@@ -70,7 +70,6 @@ class Interface:
                 self.i_priority_zero +=1
 #             print('putting packet in the IN queue')
             self.in_queue.put((priority *-1, pkt), block)
-            
 
 #wrapper class for NetworkPacket class
 class MPLSframe:
@@ -85,8 +84,12 @@ class MPLSframe:
         return self.to_byte_S()
 
     def to_byte_S(self):
-        return self.label + NetworkPacket.to_byte_S(self.network_packet)
+        byte_S = self.network_packet.to_byte_S()
+        byte_S = str(self.label).zfill(self.dst_addr_S_length) + byte_S
+        return byte_S
 
+    ## class method so that we can call it without needing an object
+    @classmethod
     def from_byte_S(self, byte_S):
         label = byte_S[0 : label_S_length]
         pkt_S = NetworkPacket.from_byte_S(byte_S[label_S_length: ])
@@ -94,6 +97,15 @@ class MPLSframe:
 
     def packet_priority(self):
         return self.network_packet.priority
+
+    # swaps the label out and generates a new byte_S
+    def swap(self, label):
+        self.label = label
+        return self.build_frame()
+
+    # returns the NetworkPacket without the MPLS frame
+    def pop(self):
+        return self.packet
 
 ## Implements a network layer packet (different from the RDT packet 
 # from programming assignment 2).
@@ -109,7 +121,7 @@ class NetworkPacket:
     # @param data_S: packet payload
     # @param prot_S: upper layer protocol for the packet (data, or control)
     # @param priority: packet priority level (DEFAULT = 0 --> low priority)
-    def __init__(self, dst_addr, prot_S, data_S, priority):
+    def __init__(self, dst_addr, prot_S, data_S, priority=0):
         self.dst_addr = dst_addr
         self.data_S = data_S
         self.prot_S = prot_S
@@ -272,7 +284,7 @@ class Router:
         print('%s: routing table' % self)
         #TODO: print the routes as a two dimensional table for easy inspection
         # Currently the function just prints the route table as a dictionary
-        print(self.rt_tbl_D)
+        print(self.mpls_table)
         
                 
     ## thread target for the host to keep forwarding data

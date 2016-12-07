@@ -27,15 +27,15 @@ if __name__ == '__main__':
     router_a = network.Router(name='A', 
                               intf_cost_L=[1,1], 
                               intf_capacity_L=[500,500],
-                              rt_tbl_D = router_a_rt_tbl_D, 
-                              max_queue_size=router_queue_size)
+                              mpls_table = router_a_rt_tbl_D,
+                              max_queue_size = router_queue_size)
     object_L.append(router_a)
     router_b_rt_tbl_D = {2: {1: 3}} # packet to host 2 through interface 1 for cost 3
     router_b = network.Router(name='B', 
                               intf_cost_L=[1,3], 
                               intf_capacity_L=[500,100],
-                              rt_tbl_D = router_b_rt_tbl_D, 
-                              max_queue_size=router_queue_size)
+                              mpls_table = router_b_rt_tbl_D,
+                              max_queue_size = router_queue_size)
     object_L.append(router_b)
     
     #create a Link Layer to keep track of links between network nodes
