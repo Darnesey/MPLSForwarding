@@ -93,9 +93,11 @@ if __name__ == '__main__':
     #     print(priority)
     #     client.udt_send(2, 'Sample client data %d' % i, priority)
     priority = 0
-    host_1.udt_send(3,'Sample client data from host 1 to 3 %d', priority)
+    host_1.udt_send(3,'Sample client data from host 1 to 3 with priority 0 %d', priority)
+    priority = 0
+    host_1.udt_send(3,'Sample client data from host 1 to 3 with priority 0 %d', priority)
     priority = 1
-    host_2.udt_send(3,'Sample client data from host 2 to 3 %d', priority)
+    host_2.udt_send(3,'Sample client data from host 2 to 3 with priority 1 %d', priority)
         
     #give the network sufficient time to transfer all packets before quitting
     sleep(simulation_time)
