@@ -26,7 +26,7 @@ if __name__ == '__main__':
     object_L.append(host_3)
 
     # create routers and routing tables for connected clients (subnets)
-    router_a_mpls_tbl = {1: [0, 10, 2], 2: [1, 20, 3]} # This table is confusing as there would not be MPLS frames on the incoming packets. I'm not sure what the keys should be
+    router_a_mpls_tbl = {-1: [0, 10, 2], -2: [1, 20, 3]} # This table is confusing as there would not be MPLS frames on the incoming packets. I'm not sure what the keys should be
     router_a = network.Router(name='A',
                               intf_cost_L=[1, 1, 1, 1],
                               intf_capacity_L=[500,500,500,500],
@@ -88,10 +88,14 @@ if __name__ == '__main__':
         t.start()
     
     #create some send events    
-    for i in range(5):
-        priority = i%2
-        print(priority)
-        client.udt_send(2, 'Sample client data %d' % i, priority)
+    # for i in range(5):
+    #     priority = i%2
+    #     print(priority)
+    #     client.udt_send(2, 'Sample client data %d' % i, priority)
+    priority = 0
+    host_1.udt_send(3,'Sample client data from host 1 to 3 %d', priority)
+    priority = 1
+    host_2.udt_send(3,'Sample client data from host 2 to 3 %d', priority)
         
     #give the network sufficient time to transfer all packets before quitting
     sleep(simulation_time)
