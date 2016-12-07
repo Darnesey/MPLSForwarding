@@ -6,12 +6,6 @@ Created on Oct 12, 2016
 import queue
 import threading
 
-class MPLSframe:
-    ## @param NetworkPacket - a network packet to encapsulate
-    #  @param label - a path label for the network packet
-    def __init__(self, label, network_packet):
-        self.network_packet = network_packet
-        self.label = label
 
 ## wrapper class for a queue of packets
 class Interface:
@@ -77,7 +71,30 @@ class Interface:
 #             print('putting packet in the IN queue')
             self.in_queue.put((priority *-1, pkt), block)
             
-        
+
+#wrapper class for NetworkPacket class
+class MPLSframe:
+    label_S_length = 20
+    ## @param NetworkPacket - a network packet to encapsulate
+    #  @param label - a path label for the network packet
+    def __init__(self, label, network_packet):
+        self.network_packet = network_packet
+        self.label = label
+
+    def __str__(self):
+        return self.to_byte_S()
+
+    def to_byte_S(self):
+        return self.label + NetworkPacket.to_byte_S(self.network_packet)
+
+    def from_byte_S(self, byte_S):
+        label = byte_S[0 : label_S_length]
+        pkt_S = NetworkPacket.from_byte_S(byte_S[label_S_length: ])
+        return self(label, self.pkt)
+
+    def packet_priority(self):
+        return self.network_packet.priority
+
 ## Implements a network layer packet (different from the RDT packet 
 # from programming assignment 2).
 # NOTE: This class will need to be extended to for the packet to include
@@ -183,7 +200,7 @@ class Router:
     # @param intf_capacity_L: capacities of outgoing interfaces in bps 
     # @param rt_tbl_D: routing table dictionary (starting reachability), eg. {1: {1: 1}} # packet to host 1 through interface 1 for cost 1
     # @param max_queue_size: max queue length (passed to Interface)
-    def __init__(self, name, intf_cost_L, intf_capacity_L, rt_tbl_D, max_queue_size):
+    def __init__(self, name, intf_cost_L, intf_capacity_L, mpls_table, max_queue_size):
         self.stop = False #for thread termination
         self.name = name
         #create a list of interfaces
@@ -192,8 +209,8 @@ class Router:
         self.intf_L = []
         for i in range(len(intf_cost_L)):
             self.intf_L.append(Interface(intf_cost_L[i], max_queue_size, intf_capacity_L[i]))
-        #set up the routing table for connected hosts
-        self.rt_tbl_D = rt_tbl_D 
+        #set up the mpls routing table for connected hosts
+        self.mpls_table = mpls_table
 
     ## called when printing the object
     def __str__(self):
