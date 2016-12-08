@@ -12,7 +12,7 @@ INF = 9999999
 
 ##configuration parameters
 router_queue_size = 0 #0 means unlimited
-simulation_time = 20 #give the network sufficient time to transfer all packets before quitting
+simulation_time = 30 #give the network sufficient time to transfer all packets before quitting
 
 if __name__ == '__main__':
     object_L = [] #keeps track of objects, so we can kill their threads
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     object_L.append(host_1)
     host_2 = network.Host(2)
     object_L.append(host_2)
-    host_3 = network.Host(2)
+    host_3 = network.Host(3)
     object_L.append(host_3)
 
     # create routers and routing tables for connected clients (subnets)
@@ -94,8 +94,11 @@ if __name__ == '__main__':
     #     client.udt_send(2, 'Sample client data %d' % i, priority)
     priority = 0
     host_1.udt_send(3,'Sample client data from host 1 to 3 with priority 0 %d', priority)
-    priority = 0
     host_1.udt_send(3,'Sample client data from host 1 to 3 with priority 0 %d', priority)
+    priority = 1
+    host_1.udt_send(3,'Sample client data from host 1 to 3 with priority 0 %d', priority)
+    priority = 0
+    host_2.udt_send(3,'Sample client data from host 2 to 3 with priority 1 %d', priority)
     priority = 1
     host_2.udt_send(3,'Sample client data from host 2 to 3 with priority 1 %d', priority)
         

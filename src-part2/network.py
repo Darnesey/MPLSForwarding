@@ -205,7 +205,7 @@ class Host:
     def udt_receive(self):
         pkt_S = self.intf_L[0].get('in')
         if pkt_S is not None:
-            print('%s: received packet "%s" with priority %d' % (self, pkt_S, NetworkPacket.from_byte_S(pkt_S).priority))
+            print('\n%s: received packet "%s" with priority %d\n\n' % (self, pkt_S, NetworkPacket.from_byte_S(pkt_S).priority))
        
     ## thread target for the host to keep receiving data
     def run(self):
