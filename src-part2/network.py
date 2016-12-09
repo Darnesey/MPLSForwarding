@@ -84,7 +84,7 @@ class Interface:
             self.in_queue.put((priority *-1, pkt), block)
 #wrapper class for NetworkPacket class
 class MPLSframe:
-    label_S_length = 20
+    label_S_length = 2
     ## @param NetworkPacket - a network packet to encapsulate
     #  @param label - a path label for the network packet
     def __init__(self, label, network_packet):
